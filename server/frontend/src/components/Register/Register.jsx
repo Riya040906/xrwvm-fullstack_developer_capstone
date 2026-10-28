@@ -1,17 +1,46 @@
-
-import React, { useState } from 'react';
-import './Register.css';
+import React, { useState } from "react";
+import "./Register.css";
 
 const Register = () => {
-  const [userName, setUserName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    alert('Registration form submitted');
+
+    try {
+      const response = await fetch(
+        `${window.location.origin}/djangoapp/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userName,
+            firstName,
+            lastName,
+            email,
+            password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert(data.error || "Registration failed.");
+        return;
+      }
+
+      alert("Registration successful. Please log in.");
+      window.location.href = "/login";
+    } catch (error) {
+      alert("Could not connect to the server. Please try again.");
+    }
   };
 
   return (
@@ -80,4 +109,3 @@ const Register = () => {
 };
 
 export default Register;
-
