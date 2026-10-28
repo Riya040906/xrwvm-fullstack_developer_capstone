@@ -58,6 +58,7 @@ def logout_request(request):
     logout(request)
     return JsonResponse({'status': 'Logged out'})
 
+
 @csrf_exempt
 def registration(request):
     if request.method != "POST":
@@ -75,7 +76,8 @@ def registration(request):
             )
 
         if User.objects.filter(username=username).exists():
-            return JsonResponse({"error": "Username already exists"}, status=400)
+            return JsonResponse(
+                {"error": "Username already exists"}, status=400)
 
         User.objects.create_user(
             username=username,
@@ -91,6 +93,7 @@ def registration(request):
     except (json.JSONDecodeError, TypeError):
         return JsonResponse({"error": "Invalid JSON"}, status=400)
 
+
 def get_cars(request):
     if not CarMake.objects.exists():
         initiate()
@@ -104,6 +107,7 @@ def get_cars(request):
         for car_model in car_models
     ]
     return JsonResponse({"CarModels": cars})
+
 
 def get_dealerships(request, state="All"):
     endpoint = (
